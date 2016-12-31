@@ -409,7 +409,7 @@ function SetGlobalConst()
 
     CC.MoneyID=174;              --金钱物品id
 
-    CC.Shemale={ [78]=1,[91]=1}   --需要自宫的书的id
+    CC.Shemale={ [78]=1,[93]=1}   --需要自宫的书的id
 
    CC.Effect={[0]=9,14,17,9,13,                    --eft.idx/grp贴图各个武功效果贴图个数
                  17,17,17,18,19,
