@@ -344,12 +344,12 @@ function SetGlobalConst()
    CC.XScale=CONFIG.XScale;    --贴图一半的宽高
    CC.YScale=CONFIG.YScale;
 
-   CC.Frame=50;     --每帧毫秒数
+   CC.Frame=30;     --每帧毫秒数
    CC.SceneMoveFrame=CC.Frame*2;           --场景移动帧速，用于场景移动事件
    CC.PersonMoveFrame=CC.Frame*2;          --主角移动速度，用于主角移动事件
    CC.AnimationFrame=CC.Frame*3;           --动画显示帧速，用于显示动画事件
 
-   CC.WarAutoDelay=300;                   --自动战斗时显示头像的延时
+   CC.WarAutoDelay=500;                   --自动战斗时显示头像的延时
 
    CC.DirectX={0,1,-1,0};  --不同方向x，y的加减值，用于走路改变坐标值
    CC.DirectY={-1,0,0,1};

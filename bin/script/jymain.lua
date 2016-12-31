@@ -4154,6 +4154,7 @@ function WarMain(warid,isexp)           --战斗主函数
     end
 
     while true do             --战斗主循环
+        WarPersonSort();    --战斗人按轻功排序
 
         for i=0,WAR.PersonNum-1 do
             WAR.Person[i]["贴图"]=WarCalPersonPic(i);
@@ -5737,7 +5738,7 @@ function War_WugongHurtLife(emenyid,wugong,level)             --计算武功伤�
     if JY.Person[pid]["防具"]>=0 then
         fightnum=fightnum+JY.Thing[JY.Person[pid]["防具"]]["加攻击力"];
     end
-    fightnum=fightnum+mywuxue;
+    fightnum=fightnum+mywuxue*2;
 
     --计算防御力
     local defencenum=JY.Person[eid]["防御力"];
@@ -5747,12 +5748,13 @@ function War_WugongHurtLife(emenyid,wugong,level)             --计算武功伤�
     if JY.Person[eid]["防具"]>=0 then
         defencenum=defencenum+JY.Thing[JY.Person[eid]["防具"]]["加防御力"];
     end
-    defencenum= defencenum+ emenywuxue;
+    defencenum= defencenum+ emenywuxue*2;
 
     --计算实际伤害
     local hurt=(fightnum-3*defencenum)*2/3+Rnd(20)-Rnd(20);
     if hurt <0 then
-        hurt=Rnd(10)+1;
+        -- hurt=Rnd(10)+1;
+        hurt = fightnum/10+Rnd(4)-Rnd(4);
     end
     hurt=hurt+JY.Person[pid]["体力"]/15+JY.Person[eid]["受伤程度"]/20;
 
