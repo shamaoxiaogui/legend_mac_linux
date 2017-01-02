@@ -757,7 +757,7 @@ function ShowPersonStatus_sub(id,page)    --显示人物状态页面
     local p=JY.Person[id];
     local width=18*size+15;             --18个汉字字符宽
     local h=size+CC.PersonStateRowPixel;
-    local height=13*h+10;                --12个汉字字符高
+    local height=14*h+10;                --12个汉字字符高
     local dx=(CC.ScreenW-width)/2;
     local dy=(CC.ScreenH-height)/2;
 
@@ -846,7 +846,7 @@ if page==1 then
         tmp3=tmp3+JY.Thing[p["防具"]]["加轻功"];
     end
 
-    i=i+1;
+    i=i+2;
     DrawString(x1,y1+h*i,"左右键翻页，上下键查看其它队友",C_RED,size);
 
 
@@ -867,6 +867,7 @@ if page==1 then
     DrawAttrib("特殊兵器",C_WHITE,C_GOLD);
     DrawAttrib("暗器技巧",C_WHITE,C_GOLD);
     DrawAttrib("资质",C_WHITE,C_GOLD);
+    DrawAttrib("攻击带毒",C_WHITE,C_GOLD);
 
 elseif page==2 then
     i=i+1;
@@ -3120,6 +3121,7 @@ end
 
 
 function instruct_12()             --住宿，回复体力
+    -- debug.Debug();
     for i=1,CC.TeamNum do
         local id=JY.Base["队伍" .. i];
         if id>=0 then
@@ -4449,59 +4451,61 @@ function War_PersonTrainBook(pid)           --战斗后修炼秘籍是否成功
 
     local needpoint=TrainNeedExp(pid);      --计算修炼成功需要点数
 
-    if p["修炼点数"]>=needpoint then   --修炼成功
-
-        DrawStrBoxWaitKey( string.format("%s 修炼 %s 成功",p["姓名"],JY.Thing[thingid]["名称"]),C_WHITE,CC.DefaultFont);
-
-        AddPersonAttrib(pid,"生命最大值",JY.Thing[thingid]["加生命最大值"]);
-        if JY.Thing[thingid]["改变内力性质"]==2 then
-            p["内力性质"]=2;
-        end
-        AddPersonAttrib(pid,"内力最大值",JY.Thing[thingid]["加内力最大值"]);
-        AddPersonAttrib(pid,"攻击力",JY.Thing[thingid]["加攻击力"]);
-        AddPersonAttrib(pid,"轻功",JY.Thing[thingid]["加轻功"]);
-        AddPersonAttrib(pid,"防御力",JY.Thing[thingid]["加防御力"]);
-        AddPersonAttrib(pid,"医疗能力",JY.Thing[thingid]["加医疗能力"]);
-        AddPersonAttrib(pid,"用毒能力",JY.Thing[thingid]["加用毒能力"]);
-        AddPersonAttrib(pid,"解毒能力",JY.Thing[thingid]["加解毒能力"]);
-        AddPersonAttrib(pid,"抗毒能力",JY.Thing[thingid]["加抗毒能力"]);
-        AddPersonAttrib(pid,"拳掌功夫",JY.Thing[thingid]["加拳掌功夫"]);
-        AddPersonAttrib(pid,"御剑能力",JY.Thing[thingid]["加御剑能力"]);
-        AddPersonAttrib(pid,"耍刀技巧",JY.Thing[thingid]["加耍刀技巧"]);
-        AddPersonAttrib(pid,"特殊兵器",JY.Thing[thingid]["加特殊兵器"]);
-        AddPersonAttrib(pid,"暗器技巧",JY.Thing[thingid]["加暗器技巧"]);
-        AddPersonAttrib(pid,"武学常识",JY.Thing[thingid]["加武学常识"]);
-        AddPersonAttrib(pid,"品德",JY.Thing[thingid]["加品德"]);
-        AddPersonAttrib(pid,"攻击带毒",JY.Thing[thingid]["加攻击带毒"]);
-        if JY.Thing[thingid]["加攻击次数"]==1 then
-            p["左右互搏"]=1;
-        end
-
-        p["修炼点数"]=0;
-
-        if wugongid>=0 then
-            local oldwugong=0;
-            for i =1,10 do
-                if p["武功" .. i]==wugongid then
-                    oldwugong=1;
-                    p["武功等级" .. i]=p["武功等级" .. i]+100;
-
-                    DrawStrBoxWaitKey(string.format("%s 升为第%s级",JY.Wugong[wugongid]["名称"],math.modf(p["武功等级" ..i]/100)+1),C_WHITE,CC.DefaultFont);
-
-                    break;
-                end
+    local curp=p["修炼点数"];
+    while (curp>=needpoint)
+        do
+            DrawStrBoxWaitKey( string.format("%s 修炼 %s 成功",p["姓名"],JY.Thing[thingid]["名称"]),C_WHITE,CC.DefaultFont);
+            AddPersonAttrib(pid,"生命最大值",JY.Thing[thingid]["加生命最大值"]);
+            if JY.Thing[thingid]["改变内力性质"]==2 then
+                p["内力性质"]=2;
             end
-            if oldwugong==0 then  --新的武功
-                for i=1,10 do
-                    if p["武功" .. i]==0 then
-                        p["武功" .. i]=wugongid;
+            AddPersonAttrib(pid,"内力最大值",JY.Thing[thingid]["加内力最大值"]);
+            AddPersonAttrib(pid,"攻击力",JY.Thing[thingid]["加攻击力"]);
+            AddPersonAttrib(pid,"轻功",JY.Thing[thingid]["加轻功"]);
+            AddPersonAttrib(pid,"防御力",JY.Thing[thingid]["加防御力"]);
+            AddPersonAttrib(pid,"医疗能力",JY.Thing[thingid]["加医疗能力"]);
+            AddPersonAttrib(pid,"用毒能力",JY.Thing[thingid]["加用毒能力"]);
+            AddPersonAttrib(pid,"解毒能力",JY.Thing[thingid]["加解毒能力"]);
+            AddPersonAttrib(pid,"抗毒能力",JY.Thing[thingid]["加抗毒能力"]);
+            AddPersonAttrib(pid,"拳掌功夫",JY.Thing[thingid]["加拳掌功夫"]);
+            AddPersonAttrib(pid,"御剑能力",JY.Thing[thingid]["加御剑能力"]);
+            AddPersonAttrib(pid,"耍刀技巧",JY.Thing[thingid]["加耍刀技巧"]);
+            AddPersonAttrib(pid,"特殊兵器",JY.Thing[thingid]["加特殊兵器"]);
+            AddPersonAttrib(pid,"暗器技巧",JY.Thing[thingid]["加暗器技巧"]);
+            AddPersonAttrib(pid,"武学常识",JY.Thing[thingid]["加武学常识"]);
+            AddPersonAttrib(pid,"品德",JY.Thing[thingid]["加品德"]);
+            AddPersonAttrib(pid,"攻击带毒",JY.Thing[thingid]["加攻击带毒"]);
+            if JY.Thing[thingid]["加攻击次数"]==1 then
+                p["左右互搏"]=1;
+            end
+            curp=curp-needpoint;
+            if wugongid>=0 then
+                local oldwugong=0;
+                for i =1,10 do
+                    if p["武功" .. i]==wugongid then
+                        oldwugong=1;
+                        p["武功等级" .. i]=p["武功等级" .. i]+100;
+
+                        DrawStrBoxWaitKey(string.format("%s 升为第%s级",JY.Wugong[wugongid]["名称"],math.modf(p["武功等级" ..i]/100)+1),C_WHITE,CC.DefaultFont);
+
                         break;
                     end
                 end
-                ---这里不考虑10个武功已满的时候如何增加新的武功
+                if oldwugong==0 then  --新的武功
+                    for i=1,10 do
+                        if p["武功" .. i]==0 then
+                            p["武功" .. i]=wugongid;
+                            break;
+                        end
+                    end
+                    ---这里不考虑10个武功已满的时候如何增加新的武功
+                end
             end
+            p["修炼点数"]=curp;
+            needpoint=TrainNeedExp(pid);      --计算修炼成功需要点数
         end
-    end
+
+
 end
 
 --练出药品
@@ -4517,55 +4521,66 @@ function War_PersonTrainDrug(pid)         --战斗后是否修炼出物品
         return ;
     end
 
+    local curp=p["物品修炼点数"]
     local needpoint=(7-math.modf(p["资质"]/15))*JY.Thing[thingid]["练出物品需经验"];
+    while (curp>=needpoint)
+        do
+            local haveMaterial=0;       --是否有需要的材料
+            local MaterialNum=-1;
+            for i=1,CC.MyThingNum do
+                if JY.Base["物品" .. i]==JY.Thing[thingid]["需材料"] then
+                    haveMaterial=1;
+                    MaterialNum=JY.Base["物品数量" .. i]
+                    break;
+                end
+            end
+
+            if haveMaterial==1 then   --有材料
+                local enough={};
+                local canMake=0;
+                for i=1,5 do       --根据需要材料的数量，标记可以练出哪些物品
+                    if JY.Thing[thingid]["练出物品" .. i] >=0 and MaterialNum >= JY.Thing[thingid]["需要物品数量" .. i] then
+                        canMake=1;
+                        enough[i]=1;
+                    else
+                        enough[i]=0;
+                    end
+                end
+
+                if canMake ==1 then    --可练出物品
+                    local makeID;
+                    while true do      --随机选择练出的物品，必须是前面enough数组中标记可以练出的
+                        makeID=Rnd(5)+1;
+                        if enough[makeID]==1 then
+                            break;
+                        end
+                    end
+                    local newThingID=JY.Thing[thingid]["练出物品" .. makeID];
+
+                    DrawStrBoxWaitKey(string.format("%s 制造出 %s",p["姓名"],JY.Thing[newThingID]["名称"]),C_WHITE,CC.DefaultFont);
+
+                    if instruct_18(newThingID)==true then       --已经有物品
+                        instruct_32(newThingID,1);
+                    else
+                        instruct_32(newThingID,1+Rnd(3));
+                    end
+
+                    instruct_32(JY.Thing[thingid]["需材料"],-JY.Thing[thingid]["需要物品数量" .. makeID]);
+                    curp=curp-needpoint;
+                    p["物品修炼点数"]=curp;
+                    needpoint=(7-math.modf(p["资质"]/15))*JY.Thing[thingid]["练出物品需经验"];
+                else
+                    return;
+                end
+            else
+                return;
+            end
+            -- 这两个else-return其实有可能导致p["物品修炼点数"]溢出，不过考虑其实际值不大，不做处理
+        end
     if p["物品修炼点数"]< needpoint then
         return ;
     end
 
-    local haveMaterial=0;       --是否有需要的材料
-    local MaterialNum=-1;
-    for i=1,CC.MyThingNum do
-        if JY.Base["物品" .. i]==JY.Thing[thingid]["需材料"] then
-            haveMaterial=1;
-            MaterialNum=JY.Base["物品数量" .. i]
-            break;
-        end
-    end
-
-    if haveMaterial==1 then   --有材料
-        local enough={};
-        local canMake=0;
-        for i=1,5 do       --根据需要材料的数量，标记可以练出哪些物品
-            if JY.Thing[thingid]["练出物品" .. i] >=0 and MaterialNum >= JY.Thing[thingid]["需要物品数量" .. i] then
-                canMake=1;
-                enough[i]=1;
-            else
-                enough[i]=0;
-            end
-        end
-
-        if canMake ==1 then    --可练出物品
-            local makeID;
-            while true do      --随机选择练出的物品，必须是前面enough数组中标记可以练出的
-                makeID=Rnd(5)+1;
-                if enough[makeID]==1 then
-                    break;
-                end
-            end
-            local newThingID=JY.Thing[thingid]["练出物品" .. makeID];
-
-            DrawStrBoxWaitKey(string.format("%s 制造出 %s",p["姓名"],JY.Thing[newThingID]["名称"]),C_WHITE,CC.DefaultFont);
-
-            if instruct_18(newThingID)==true then       --已经有物品
-                instruct_32(newThingID,1);
-            else
-                instruct_32(newThingID,1+Rnd(3));
-            end
-
-            instruct_32(JY.Thing[thingid]["需材料"],-JY.Thing[thingid]["需要物品数量" .. makeID]);
-            p["物品修炼点数"]=0;
-        end
-    end
 end
 
 --战斗是否结束
